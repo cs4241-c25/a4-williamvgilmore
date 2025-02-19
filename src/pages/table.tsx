@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-
 interface Recipe {
     _id: string;
     recipeName: string;
@@ -12,14 +11,13 @@ interface Recipe {
 }
 
 const RecipeTable = () => {
-    // Define state with Recipe[] type
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const router = useRouter();
 
     useEffect(() => {
         const fetchRecipes = async () => {
             const response = await fetch('/api/recipes');
-            const data: Recipe[] = await response.json(); // Explicitly type the data as Recipe[]
+            const data: Recipe[] = await response.json();
             setRecipes(data);
         };
         fetchRecipes();
@@ -35,6 +33,7 @@ const RecipeTable = () => {
 
     const handleSave = async (index: number) => {
         const updatedRecipe = recipes[index];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await fetch('/api/recipes', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -45,18 +44,21 @@ const RecipeTable = () => {
                 recipeServings: updatedRecipe.recipeServings,
             }),
         });
+
+        if (response.ok) {
+            // Optionally handle success (e.g., show a notification or update state)
+        }
     };
 
     const handleDelete = async (id: string) => {
-        const response = await fetch(`/api/recipes`, {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        await fetch(`/api/recipes`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id }),
         });
 
-        if (response.ok) {
-            setRecipes(recipes.filter(recipe => recipe._id !== id));
-        }
+        setRecipes(recipes.filter(recipe => recipe._id !== id));
     };
 
     return (
