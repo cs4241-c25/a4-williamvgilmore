@@ -18,14 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             };
             const result = await collection.insertOne(newRecipe);
             res.status(200).json({ message: 'Recipe added successfully', data: result });
-        } catch (error) {
+        } catch {
             res.status(500).json({ message: 'Failed to add recipe' });
         }
     } else if (req.method === 'GET') {
         try {
             const recipes = await collection.find({}).toArray();
             res.status(200).json(recipes);
-        } catch (error) {
+        } catch {
             res.status(500).json({ message: 'Failed to fetch recipes' });
         }
     } else if (req.method === 'PUT') {
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             res.status(200).json({ message: 'Recipe updated successfully', data: result });
-        } catch (error) {
+        } catch {
             res.status(500).json({ message: 'Failed to update recipe' });
         }
     } else if (req.method === 'DELETE') {
@@ -55,11 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             res.status(200).json({ message: 'Recipe deleted successfully' });
-        } catch (error) {
+        } catch {
             res.status(500).json({ message: 'Failed to delete recipe' });
         }
-    } else {
-        // Handling unsupported methods
-        res.status(405).json({ message: 'Method Not Allowed' });
     }
 }
