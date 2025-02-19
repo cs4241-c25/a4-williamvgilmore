@@ -2,20 +2,30 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
+
+interface Recipe {
+    _id: string;
+    recipeName: string;
+    recipeCost: number;
+    recipeServings: number;
+    createdAt: Date;
+}
+
 const RecipeTable = () => {
-    const [recipes, setRecipes] = useState([]);
+    // Define state with Recipe[] type
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
     const router = useRouter();
 
     useEffect(() => {
         const fetchRecipes = async () => {
             const response = await fetch('/api/recipes');
-            const data = await response.json();
+            const data: Recipe[] = await response.json(); // Explicitly type the data as Recipe[]
             setRecipes(data);
         };
         fetchRecipes();
     }, []);
 
-    const handleEdit = (index: number, field: string, value: string) => {
+    const handleEdit = (index: number, field: keyof Recipe, value: string) => {
         setRecipes(prevRecipes =>
             prevRecipes.map((recipe, i) =>
                 i === index ? { ...recipe, [field]: value } : recipe
@@ -25,7 +35,6 @@ const RecipeTable = () => {
 
     const handleSave = async (index: number) => {
         const updatedRecipe = recipes[index];
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await fetch('/api/recipes', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -36,7 +45,6 @@ const RecipeTable = () => {
                 recipeServings: updatedRecipe.recipeServings,
             }),
         });
-
     };
 
     const handleDelete = async (id: string) => {
@@ -69,7 +77,7 @@ const RecipeTable = () => {
                         <tbody>
                         {recipes.length > 0 ? (
                             recipes.map((recipe, index) => (
-                                <tr key={index} className="border-b border-gray-200 hover:bg-green-100 transition duration-300">
+                                <tr key={recipe._id} className="border-b border-gray-200 hover:bg-green-100 transition duration-300">
                                     <td className="px-4 py-3 text-gray-900">
                                         <input
                                             type="text"
