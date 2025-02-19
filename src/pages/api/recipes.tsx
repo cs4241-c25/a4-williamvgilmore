@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { db } = await connectToDatabase();
     const collection = db.collection('recipes');
 
@@ -17,7 +18,6 @@ export default async function handler(req, res) {
             };
             const result = await collection.insertOne(newRecipe);
             res.status(200).json({ message: 'Recipe added successfully', data: result });
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             res.status(500).json({ message: 'Failed to add recipe' });
         }
@@ -25,7 +25,6 @@ export default async function handler(req, res) {
         try {
             const recipes = await collection.find({}).toArray();
             res.status(200).json(recipes);
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             res.status(500).json({ message: 'Failed to fetch recipes' });
         }
@@ -39,7 +38,6 @@ export default async function handler(req, res) {
             }
 
             res.status(200).json({ message: 'Recipe updated successfully', data: result });
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             res.status(500).json({ message: 'Failed to update recipe' });
         }
@@ -57,9 +55,11 @@ export default async function handler(req, res) {
             }
 
             res.status(200).json({ message: 'Recipe deleted successfully' });
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             res.status(500).json({ message: 'Failed to delete recipe' });
         }
+    } else {
+        // Handling unsupported methods
+        res.status(405).json({ message: 'Method Not Allowed' });
     }
 }
