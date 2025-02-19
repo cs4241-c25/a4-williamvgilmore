@@ -25,7 +25,8 @@ const RecipeTable = () => {
 
     const handleSave = async (index: number) => {
         const updatedRecipe = recipes[index];
-        const response = await fetch(`/api/recipes`, {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const response = await fetch('/api/recipes', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -14,7 +14,7 @@ const RecipeCalculator = () => {
             recipeCost: formData.get('recipeCost'),
             recipeServings: formData.get('recipeServings'),
         };
-
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = await fetch('/api/recipes', {
             method: 'POST',
             headers: {
